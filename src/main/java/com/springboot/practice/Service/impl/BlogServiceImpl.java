@@ -4,13 +4,11 @@ import com.alibaba.druid.sql.PagerUtils;
 import com.springboot.practice.Bean.Blog;
 import com.springboot.practice.Bean.BlogCategory;
 import com.springboot.practice.Bean.BlogTag;
+import com.springboot.practice.Bean.BlogTagRelation;
 import com.springboot.practice.Controller.VO.BlogDetailVO;
 import com.springboot.practice.Controller.VO.BlogListVO;
 import com.springboot.practice.Controller.VO.SimpleBlogListVO;
-import com.springboot.practice.Mapper.BlogCategoryMapper;
-import com.springboot.practice.Mapper.BlogCommentMapper;
-import com.springboot.practice.Mapper.BlogMapper;
-import com.springboot.practice.Mapper.BlogTagMapper;
+import com.springboot.practice.Mapper.*;
 import com.springboot.practice.Service.BlogService;
 import com.springboot.practice.Util.MarkDownUtil;
 import com.springboot.practice.Util.PageQueryUtil;
@@ -19,6 +17,7 @@ import com.springboot.practice.Util.PatternUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -35,6 +34,8 @@ public class BlogServiceImpl implements BlogService {
     private BlogCommentMapper commentMapper;
     @Autowired
     private BlogTagMapper tagMapper;
+    @Autowired
+    private BlogTagRelationMapper blogTagRelationMapper;
 
 
     @Override
@@ -155,6 +156,66 @@ public class BlogServiceImpl implements BlogService {
         int total = blogMapper.getTotalBlogs(pageQueryUtil);
         PageResult pageResult = new PageResult(total, pageQueryUtil.getLimit(), pageQueryUtil.getPage(), blogList);
         return pageResult;
+    }
+
+    @Override
+    public Blog getBlogByBlogId(Long blogId) {
+        return blogMapper.selectByPrimaryKey(blogId);
+    }
+
+    @Override
+    @Transactional
+    public String saveBlog(Blog blog) {
+        BlogCategory blogCategory = categoryMapper.selectByPrimaryKey(blog.getBlogCategoryId());
+        if (blogCategory == null) {
+            blog.setBlogCategoryId(0);
+            blog.setBlogCategoryName("默认分类");
+        } else {
+            //设置博客分类名称
+            blog.setBlogCategoryName(blogCategory.getCategoryName());
+            //分类Rank值+1
+            blogCategory.setCategoryRank(blogCategory.getCategoryRank() + 1);
+        }
+        String[] tags = blog.getBlogTags().split(",");
+        if (tags.length > 6) {
+            return "标签个数最多为6";
+        }
+        //保存文章
+        if (blogMapper.insertSelective(blog) > 0) {
+            //要新增的tags
+            List<BlogTag> tagListForInsert = new ArrayList<>();
+            //这篇blog所有的tags，用来建立关系数据
+            List<BlogTag> allTagsList = new ArrayList<>();
+            for (int i = 0; i < tags.length; i++) {
+                BlogTag tag = tagMapper.selectByTagName(tags[i]);
+                if (tag == null) {
+                    //不存在就新增tag
+                    BlogTag tempTag = new BlogTag();
+                    tempTag.setTagName(tags[i]);
+                    tagListForInsert.add(tempTag);
+                } else {
+                    allTagsList.add(tag);
+                }
+            }
+            //新增标签数据
+            if (!CollectionUtils.isEmpty(tagListForInsert)) {
+                tagMapper.batchInsertBlogTag(tagListForInsert);
+            }
+            //修改分类排序值
+            categoryMapper.updateByPrimaryKeySelective(blogCategory);
+            //新增关系数据
+            List<BlogTagRelation> blogTagRelations = new ArrayList<>();
+            for (BlogTag tag : allTagsList) {
+                BlogTagRelation blogTagRelation = new BlogTagRelation();
+                blogTagRelation.setBlogId(blog.getBlogId());
+                blogTagRelation.setTagId(tag.getTagId());
+                blogTagRelations.add(blogTagRelation);
+            }
+            if (blogTagRelationMapper.batchInsert(blogTagRelations)>0){
+                return "保存成功";
+            }
+        }
+        return "保存失败";
     }
 
     private List<BlogListVO> getBlogListVOsByBlogs(List<Blog> blogList) {

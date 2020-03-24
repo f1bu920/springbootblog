@@ -11,7 +11,7 @@ public interface BlogMapper {
 
     int getTotalBlogs(PageQueryUtil pageQueryUtil);
 
-    List<Blog> findBlogListByType(@Param("type")int type,@Param("limit")int limit);
+    List<Blog> findBlogListByType(@Param("type") int type, @Param("limit") int limit);
 
     Blog selectByPrimaryKey(Long blogId);
 
@@ -22,4 +22,6 @@ public interface BlogMapper {
     int getTotalBlogsByTagId(PageQueryUtil pageUtil);
 
     Blog selectBySubUrl(String subUrl);
+
+    int insertSelective(Blog record);
 }

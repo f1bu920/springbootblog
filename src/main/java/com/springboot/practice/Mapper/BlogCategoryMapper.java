@@ -16,5 +16,7 @@ public interface BlogCategoryMapper {
 
     BlogCategory selectByCategoryName(String categoryName);
 
+    int updateByPrimaryKeySelective(BlogCategory record);
+
 
 }

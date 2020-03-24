@@ -1,5 +1,6 @@
 package com.springboot.practice.Controller.admin;
 
+import com.springboot.practice.Bean.Blog;
 import com.springboot.practice.Service.BlogService;
 import com.springboot.practice.Service.CategoryService;
 import com.springboot.practice.Util.PageQueryUtil;
@@ -7,10 +8,7 @@ import com.springboot.practice.Util.Result;
 import com.springboot.practice.Util.ResultGenerator;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -38,5 +36,75 @@ public class BlogController {
     public String blogs(HttpServletRequest request) {
         request.setAttribute("path", "blogs");
         return "admin/blog";
+    }
+
+    @GetMapping("/blogs/edit")
+    public String edit(HttpServletRequest request) {
+        request.setAttribute("path", "edit");
+        request.setAttribute("categories", categoryService.getAllCategories());
+        return "admin/edit";
+    }
+
+    @GetMapping("/blogs/edit/{blogId}")
+    public String edit(HttpServletRequest request, @PathVariable("blogId") Long blogId) {
+        Blog blog = blogService.getBlogByBlogId(blogId);
+        if (blog == null) {
+            return "error/error_400";
+        }
+        request.setAttribute("path", "edit");
+        request.setAttribute("blog", blog);
+        request.setAttribute("categories", categoryService.getAllCategories());
+        return "admin/edit";
+    }
+
+    @PostMapping("/blogs/save")
+    @ResponseBody
+    public Result save(@RequestParam("blogTitle") String blogTitle,
+                       @RequestParam(value = "blogSubUrl", required = false) String blogSubUrl,
+                       @RequestParam("blogCategoryId") Integer blogCategoryId,
+                       @RequestParam("blogTags") String blogTags,
+                       @RequestParam("blogContent") String blogContent,
+                       @RequestParam("blogCoverImage") String blogCoverImage,
+                       @RequestParam("blogStatus") Byte blogStatus,
+                       @RequestParam("enableComment") Byte enableComment) {
+        if (StringUtils.isEmpty(blogTitle)) {
+            return ResultGenerator.genFailResult("请输入标题");
+        }
+        if (StringUtils.isEmpty(blogTags)) {
+            return ResultGenerator.genFailResult("请输入文章标签");
+        }
+        if (blogTitle.trim().length() > 150) {
+            return ResultGenerator.genFailResult("文章标题过长");
+        }
+        if (blogTags.trim().length() > 150) {
+            return ResultGenerator.genFailResult("文章标签过长");
+        }
+        if (blogSubUrl.trim().length() > 150) {
+            return ResultGenerator.genFailResult("文章路径过长");
+        }
+        if (StringUtils.isEmpty(blogContent)) {
+            return ResultGenerator.genFailResult("请输入内容");
+        }
+        if (blogContent.trim().length() > 100000) {
+            return ResultGenerator.genFailResult("内容过长");
+        }
+        if (StringUtils.isEmpty(blogCoverImage)) {
+            return ResultGenerator.genFailResult("封面图不能为空");
+        }
+        Blog blog = new Blog();
+        blog.setBlogCategoryId(blogCategoryId);
+        blog.setBlogContent(blogContent);
+        blog.setBlogCoverImage(blogCoverImage);
+        blog.setBlogSubUrl(blogSubUrl);
+        blog.setBlogTags(blogTags);
+        blog.setBlogStatus(blogStatus);
+        blog.setEnableComment(enableComment);
+        blog.setBlogTitle(blogTitle);
+        String resultSave = blogService.saveBlog(blog);
+        if ("保存成功".equals(resultSave)) {
+            return ResultGenerator.genSuccessResult("添加成功");
+        } else {
+            return ResultGenerator.genFailResult("添加失败");
+        }
     }
 }

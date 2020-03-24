@@ -9,4 +9,6 @@ public interface BlogTagMapper {
     List<BlogTagCount> getTagCount();
 
     BlogTag selectByTagName(String tagName);
+
+    int batchInsertBlogTag(List<BlogTag> tagList);
 }
