@@ -211,11 +211,84 @@ public class BlogServiceImpl implements BlogService {
                 blogTagRelation.setTagId(tag.getTagId());
                 blogTagRelations.add(blogTagRelation);
             }
-            if (blogTagRelationMapper.batchInsert(blogTagRelations)>0){
+            if (blogTagRelationMapper.batchInsert(blogTagRelations) > 0) {
                 return "保存成功";
             }
         }
         return "保存失败";
+    }
+
+    @Override
+    @Transactional
+    public String updateBlog(Blog blog) {
+        Blog blogForUpdate = blogMapper.selectByPrimaryKey(blog.getBlogId());
+        if (blogForUpdate == null) {
+            return "数据不存在";
+        }
+        blogForUpdate.setBlogTitle(blog.getBlogTitle());
+        blogForUpdate.setBlogCoverImage(blog.getBlogCoverImage());
+        blogForUpdate.setBlogContent(blog.getBlogContent());
+        blogForUpdate.setBlogSubUrl(blog.getBlogSubUrl());
+        blogForUpdate.setBlogStatus(blog.getBlogStatus());
+        blogForUpdate.setEnableComment(blog.getEnableComment());
+        BlogCategory blogCategory = categoryMapper.selectByPrimaryKey(blog.getBlogCategoryId());
+        if (blogCategory == null) {
+            blogForUpdate.setBlogCategoryId(0);
+            blogForUpdate.setBlogCategoryName("默认分类");
+        } else {
+            //设置分类名称
+            blogForUpdate.setBlogCategoryId(blogCategory.getCategoryId());
+            blogForUpdate.setBlogCategoryName(blogCategory.getCategoryName());
+            //分类排序值+1
+            blogCategory.setCategoryRank(blogCategory.getCategoryRank() + 1);
+        }
+        String[] tags = blog.getBlogTags().split(",");
+        if (tags.length > 6) {
+            return "标签数量限制为6";
+        }
+        blogForUpdate.setBlogTags(blog.getBlogTags());
+        //新增的标签
+        List<BlogTag> tagsForInsert = new ArrayList<>();
+        //这篇博客所有的标签
+        List<BlogTag> allTagsList = new ArrayList<>();
+        for (int i = 0; i < tags.length; i++) {
+            BlogTag tag = tagMapper.selectByTagName(tags[i]);
+            if (tag == null) {
+                BlogTag tempTag = new BlogTag();
+                tempTag.setTagName(tags[i]);
+                tagsForInsert.add(tempTag);
+            } else {
+                allTagsList.add(tag);
+            }
+        }
+        //新增标签数据
+        if (!CollectionUtils.isEmpty(tagsForInsert)) {
+            tagMapper.batchInsertBlogTag(tagsForInsert);
+        }
+        allTagsList.addAll(tagsForInsert);
+        //新增关系数据
+        List<BlogTagRelation> blogTagRelations = new ArrayList<>();
+        for (BlogTag tag : allTagsList) {
+            BlogTagRelation blogTagRelation = new BlogTagRelation();
+            blogTagRelation.setBlogId(blog.getBlogId());
+            blogTagRelation.setTagId(tag.getTagId());
+            blogTagRelations.add(blogTagRelation);
+        }
+        //修改分类排序信息
+        categoryMapper.updateByPrimaryKeySelective(blogCategory);
+        //删除原关系数据
+        blogTagRelationMapper.deleteByBlogId(blog.getBlogId());
+        //新增关系数据
+        blogTagRelationMapper.batchInsert(blogTagRelations);
+        if (blogMapper.updateByPrimaryKeySelective(blogForUpdate) > 0) {
+            return "success";
+        }
+        return "修改失败";
+    }
+
+    @Override
+    public Boolean deleteBatch(Integer[] ids) {
+        return blogMapper.deleteBatch(ids) > 0;
     }
 
     private List<BlogListVO> getBlogListVOsByBlogs(List<Blog> blogList) {

@@ -107,4 +107,68 @@ public class BlogController {
             return ResultGenerator.genFailResult("添加失败");
         }
     }
+
+    @PostMapping("/blogs/update")
+    @ResponseBody
+    public Result update(@RequestParam("blogId") Long blogId,
+                         @RequestParam("blogTitle") String blogTitle,
+                         @RequestParam(value = "blogSubUrl", required = false) String blogSubUrl,
+                         @RequestParam("blogCategoryId") Integer blogCategoryId,
+                         @RequestParam("blogTags") String blogTags,
+                         @RequestParam("blogContent") String blogContent,
+                         @RequestParam("blogCoverImage") String blogCoverImage,
+                         @RequestParam("blogStatus") Byte blogStatus,
+                         @RequestParam("enableComment") Byte enableComment) {
+        if (StringUtils.isEmpty(blogTitle)) {
+            return ResultGenerator.genFailResult("请输入文章标题");
+        }
+        if (blogTitle.trim().length() > 150) {
+            return ResultGenerator.genFailResult("标题过长");
+        }
+        if (StringUtils.isEmpty(blogTags)) {
+            return ResultGenerator.genFailResult("请输入文章标签");
+        }
+        if (blogTags.trim().length() > 150) {
+            return ResultGenerator.genFailResult("标签过长");
+        }
+        if (blogSubUrl.trim().length() > 150) {
+            return ResultGenerator.genFailResult("路径过长");
+        }
+        if (StringUtils.isEmpty(blogContent)) {
+            return ResultGenerator.genFailResult("请输入文章内容");
+        }
+        if (blogTags.trim().length() > 100000) {
+            return ResultGenerator.genFailResult("文章内容过长");
+        }
+        if (StringUtils.isEmpty(blogCoverImage)) {
+            return ResultGenerator.genFailResult("封面图不能为空");
+        }
+        Blog blog = new Blog();
+        blog.setBlogId(blogId);
+        blog.setBlogCategoryId(blogCategoryId);
+        blog.setBlogTitle(blogTitle);
+        blog.setBlogTags(blogTags);
+        blog.setBlogCoverImage(blogCoverImage);
+        blog.setBlogContent(blogContent);
+        blog.setEnableComment(enableComment);
+        blog.setBlogStatus(blogStatus);
+        String resultUpdate = blogService.updateBlog(blog);
+        if ("success".equals(resultUpdate)) {
+            return ResultGenerator.genSuccessResult("修改成功");
+        } else
+            return ResultGenerator.genFailResult(resultUpdate);
+    }
+
+    @PostMapping("/blogs/delete")
+    @ResponseBody
+    public Result delete(@RequestBody Integer[] ids) {
+        if (ids.length < 1) {
+            return ResultGenerator.genFailResult("参数异常");
+        }
+        if (blogService.deleteBatch(ids)) {
+            return ResultGenerator.genSuccessResult();
+        } else {
+            return ResultGenerator.genFailResult("删除失败");
+        }
+    }
 }

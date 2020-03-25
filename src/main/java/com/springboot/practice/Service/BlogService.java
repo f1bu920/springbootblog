@@ -81,4 +81,13 @@ public interface BlogService {
      * @return
      */
     String saveBlog(Blog blog);
+
+    /**
+     * 后台更新博客
+     * @param blog
+     * @return
+     */
+    String updateBlog(Blog blog);
+
+    Boolean deleteBatch(Integer[] ids);
 }

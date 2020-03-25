@@ -24,4 +24,8 @@ public interface BlogMapper {
     Blog selectBySubUrl(String subUrl);
 
     int insertSelective(Blog record);
+
+    int updateByPrimaryKeySelective(Blog record);
+
+    int deleteBatch(Integer[] ids);
 }
