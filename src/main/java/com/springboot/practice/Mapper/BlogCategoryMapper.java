@@ -18,5 +18,9 @@ public interface BlogCategoryMapper {
 
     int updateByPrimaryKeySelective(BlogCategory record);
 
+    int getTotalCategories(PageQueryUtil pageUtil);
+
+    int insertSelective(BlogCategory record);
+
 
 }
