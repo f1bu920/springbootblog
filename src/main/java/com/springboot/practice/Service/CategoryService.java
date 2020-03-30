@@ -26,5 +26,17 @@ public interface CategoryService {
      */
     Boolean saveCategory(String categoryName, String categoryIcon);
 
+    /**
+     * 更新分类
+     *
+     * @param categoryId
+     * @param categoryName
+     * @param categoryIcon
+     * @return
+     */
+    Boolean updateCategory(Integer categoryId, String categoryName, String categoryIcon);
+
     int getTotalCategories();
+
+    Boolean deleteBatch(Integer[] ids);
 }

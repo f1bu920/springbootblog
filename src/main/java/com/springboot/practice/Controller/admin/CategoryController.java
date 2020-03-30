@@ -34,9 +34,16 @@ public class CategoryController {
         return ResultGenerator.genSuccessResult(categoryService.getBlogCategoryPage(pageQueryUtil));
     }
 
+    /**
+     * 添加分类
+     *
+     * @param categoryName
+     * @param categoryIcon
+     * @return
+     */
     @PostMapping("/categories/save")
     @ResponseBody
-    public Result save(@RequestParam String categoryName, @RequestParam String categoryIcon) {
+    public Result save(@RequestParam("categoryName") String categoryName, @RequestParam("categoryIcon") String categoryIcon) {
         if (StringUtils.isEmpty(categoryName) || StringUtils.isEmpty(categoryIcon)) {
             return ResultGenerator.genFailResult("请输入分类名称或选择分类图标");
         }
@@ -44,6 +51,35 @@ public class CategoryController {
             return ResultGenerator.genSuccessResult();
         } else {
             return ResultGenerator.genFailResult("分类名称重复");
+        }
+    }
+
+
+    @PostMapping("/categories/update")
+    @ResponseBody
+    public Result update(@RequestParam("categoryId") Integer categoryId,
+                         @RequestParam("categoryName") String categoryName,
+                         @RequestParam("categoryIcon") String categoryIcon) {
+        if (StringUtils.isEmpty(categoryName) || StringUtils.isEmpty(categoryIcon)) {
+            return ResultGenerator.genFailResult("请输入分类名称或者选择分类图标");
+        }
+        if (categoryService.updateCategory(categoryId, categoryName, categoryIcon)) {
+            return ResultGenerator.genSuccessResult();
+        } else {
+            return ResultGenerator.genFailResult("分类名称重复");
+        }
+    }
+
+    @PostMapping("/categories/delete")
+    @ResponseBody
+    public Result delete(@RequestBody Integer[] ids) {
+        if (ids.length < 1) {
+            return ResultGenerator.genFailResult("参数异常");
+        }
+        if (categoryService.deleteBatch(ids)) {
+            return ResultGenerator.genSuccessResult();
+        } else {
+            return ResultGenerator.genFailResult("删除失败");
         }
     }
 }

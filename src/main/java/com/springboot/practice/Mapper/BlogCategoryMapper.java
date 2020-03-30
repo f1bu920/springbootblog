@@ -22,5 +22,7 @@ public interface BlogCategoryMapper {
 
     int insertSelective(BlogCategory record);
 
+    int deleteBatch(Integer[] ids);
+
 
 }

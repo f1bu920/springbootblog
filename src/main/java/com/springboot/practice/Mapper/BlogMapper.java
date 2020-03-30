@@ -28,4 +28,6 @@ public interface BlogMapper {
     int updateByPrimaryKeySelective(Blog record);
 
     int deleteBatch(Integer[] ids);
+
+    int updateBlogCategorys(@Param("categoryName") String categoryName, @Param("categoryId") Integer categoryId, @Param("ids") Integer[] ids);
 }
