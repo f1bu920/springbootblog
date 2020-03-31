@@ -70,6 +70,12 @@ public class CategoryController {
         }
     }
 
+    /**
+     * 删除分类
+     *
+     * @param ids
+     * @return
+     */
     @PostMapping("/categories/delete")
     @ResponseBody
     public Result delete(@RequestBody Integer[] ids) {
