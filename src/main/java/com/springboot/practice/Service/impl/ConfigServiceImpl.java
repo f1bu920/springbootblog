@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class ConfigServiceImpl implements ConfigService {
     @Autowired
-    BlogConfigMapper blogConfigMapper;
+    private BlogConfigMapper blogConfigMapper;
 
     public static final String websiteName = "flbu blog";
     public static final String websiteDescription = "flbu blog是SpringBoot2.x+Thymeleaf+Mybatis建造的个人博客网站.SpringBoot实战博客源码.个人博客搭建";
@@ -76,5 +77,16 @@ public class ConfigServiceImpl implements ConfigService {
             }
         }
         return configMap;
+    }
+
+    @Override
+    public int updateConfig(String configName, String configValue) {
+        BlogConfig blogConfig = blogConfigMapper.selectByPrimaryKey(configName);
+        if (blogConfig != null) {
+            blogConfig.setConfigValue(configValue);
+            blogConfig.setUpdateTime(new Date());
+            return blogConfigMapper.updateByPrimaryKeySelective(blogConfig);
+        }
+        return 0;
     }
 }
