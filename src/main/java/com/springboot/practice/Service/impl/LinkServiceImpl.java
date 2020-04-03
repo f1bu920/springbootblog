@@ -3,6 +3,8 @@ package com.springboot.practice.Service.impl;
 import com.springboot.practice.Bean.BlogLink;
 import com.springboot.practice.Mapper.BlogLinkMapper;
 import com.springboot.practice.Service.LinkService;
+import com.springboot.practice.Util.PageQueryUtil;
+import com.springboot.practice.Util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -27,5 +29,23 @@ public class LinkServiceImpl implements LinkService {
             return linksMap;
         }
         return null;
+    }
+
+    @Override
+    public PageResult getBlogLinkPage(PageQueryUtil pageUtil) {
+        List<BlogLink> linkList = blogLinkMapper.findLinkList(pageUtil);
+        int total = blogLinkMapper.getTotalLinks(pageUtil);
+        PageResult pageResult = new PageResult(total, pageUtil.getLimit(), pageUtil.getPage(), linkList);
+        return pageResult;
+    }
+
+    @Override
+    public Boolean saveLink(BlogLink link) {
+        return blogLinkMapper.insertSelective(link) > 0;
+    }
+
+    @Override
+    public BlogLink selectById(int id) {
+        return blogLinkMapper.selectByPrimaryKey(id);
     }
 }

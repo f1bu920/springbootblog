@@ -7,4 +7,10 @@ import java.util.List;
 
 public interface BlogLinkMapper {
     List<BlogLink> findLinkList(PageQueryUtil pageUtil);
+
+    int getTotalLinks(PageQueryUtil pageUtil);
+
+    int insertSelective(BlogLink record);
+
+    BlogLink selectByPrimaryKey(Integer linkId);
 }
