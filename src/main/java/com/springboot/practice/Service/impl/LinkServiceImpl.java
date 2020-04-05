@@ -48,4 +48,14 @@ public class LinkServiceImpl implements LinkService {
     public BlogLink selectById(int id) {
         return blogLinkMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public Boolean updateLink(BlogLink blogLink) {
+        return blogLinkMapper.updateByPrimaryKeySelective(blogLink) > 0;
+    }
+
+    @Override
+    public Boolean deleteBatch(Integer[] ids) {
+        return blogLinkMapper.deleteBatch(ids) > 0;
+    }
 }

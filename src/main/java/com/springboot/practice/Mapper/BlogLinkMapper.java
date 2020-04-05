@@ -13,4 +13,8 @@ public interface BlogLinkMapper {
     int insertSelective(BlogLink record);
 
     BlogLink selectByPrimaryKey(Integer linkId);
+
+    int updateByPrimaryKeySelective(BlogLink record);
+
+    int deleteBatch(Integer[] ids);
 }

@@ -21,4 +21,8 @@ public interface LinkService {
     Boolean saveLink(BlogLink link);
 
     BlogLink selectById(int id);
+
+    Boolean updateLink(BlogLink blogLink);
+
+    Boolean deleteBatch(Integer[] ids);
 }

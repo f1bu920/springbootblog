@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.annotation.RequestScope;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -74,5 +75,41 @@ public class LinkController {
     @ResponseBody
     public Result info(@PathVariable("id") Integer id) {
         return ResultGenerator.genSuccessResult(linkService.selectById(id));
+    }
+
+    @PostMapping("/links/update")
+    @ResponseBody
+    public Result update(@RequestParam("linkId") Integer linkId,
+                         @RequestParam("linkType") Integer linkType,
+                         @RequestParam("linkName") String linkName,
+                         @RequestParam("linkUrl") String linkUrl,
+                         @RequestParam("linkRank") Integer linkRank,
+                         @RequestParam("linkDescription") String linkDescription) {
+        BlogLink blogLink = linkService.selectById(linkId);
+        if (blogLink == null) {
+            return ResultGenerator.genFailResult("不存在");
+        }
+        if (linkType == null || linkType < 0 || linkRank == null || linkRank < 0 || StringUtils.isEmpty(linkDescription) || StringUtils.isEmpty(linkName) || StringUtils.isEmpty(linkUrl)) {
+            return ResultGenerator.genFailResult("参数异常");
+        }
+        blogLink.setLinkUrl(linkUrl);
+        blogLink.setLinkType(linkType.byteValue());
+        blogLink.setLinkRank(linkRank);
+        blogLink.setLinkDescription(linkDescription);
+        blogLink.setLinkName(linkName);
+        return ResultGenerator.genSuccessResult(linkService.updateLink(blogLink));
+    }
+
+    @PostMapping("/links/delete")
+    @ResponseBody
+    public Result delete(@RequestBody Integer[] ids) {
+        if (ids.length < 1) {
+            return ResultGenerator.genFailResult("参数异常");
+        }
+        if (linkService.deleteBatch(ids)) {
+            return ResultGenerator.genSuccessResult();
+        } else {
+            return ResultGenerator.genFailResult("删除失败");
+        }
     }
 }
