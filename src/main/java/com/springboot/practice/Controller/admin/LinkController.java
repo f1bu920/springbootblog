@@ -6,10 +6,8 @@ import com.springboot.practice.Util.PageQueryUtil;
 import com.springboot.practice.Util.Result;
 import com.springboot.practice.Util.ResultGenerator;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.annotation.RequestScope;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

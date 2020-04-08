@@ -25,4 +25,6 @@ public interface LinkService {
     Boolean updateLink(BlogLink blogLink);
 
     Boolean deleteBatch(Integer[] ids);
+
+    int getTotalLinks();
 }

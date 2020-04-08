@@ -18,4 +18,6 @@ public interface CommentService {
      * @return
      */
     Boolean addComment(BlogComment blogComment);
+
+    int getTotalComments();
 }

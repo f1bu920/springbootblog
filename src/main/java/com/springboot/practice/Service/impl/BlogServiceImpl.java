@@ -291,6 +291,11 @@ public class BlogServiceImpl implements BlogService {
         return blogMapper.deleteBatch(ids) > 0;
     }
 
+    @Override
+    public int getTotalBlogs() {
+        return blogMapper.getTotalBlogs(null);
+    }
+
     private List<BlogListVO> getBlogListVOsByBlogs(List<Blog> blogList) {
         List<BlogListVO> blogListVOS = new ArrayList<>();
         if (!CollectionUtils.isEmpty(blogList)) {

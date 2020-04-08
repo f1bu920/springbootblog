@@ -58,4 +58,9 @@ public class LinkServiceImpl implements LinkService {
     public Boolean deleteBatch(Integer[] ids) {
         return blogLinkMapper.deleteBatch(ids) > 0;
     }
+
+    @Override
+    public int getTotalLinks() {
+        return blogLinkMapper.getTotalLinks(null);
+    }
 }
