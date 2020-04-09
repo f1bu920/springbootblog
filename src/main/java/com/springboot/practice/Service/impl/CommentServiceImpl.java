@@ -48,4 +48,24 @@ public class CommentServiceImpl implements CommentService {
     public int getTotalComments() {
         return blogCommentMapper.getTotalBlogComments(null);
     }
+
+    @Override
+    public PageResult getCommentsPage(PageQueryUtil pageUtil) {
+        return null;
+    }
+
+    @Override
+    public Boolean checkDone(Integer[] ids) {
+        return null;
+    }
+
+    @Override
+    public Boolean reply(Long commentId, String replyBody) {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteBatch(Integer[] ids) {
+        return null;
+    }
 }
