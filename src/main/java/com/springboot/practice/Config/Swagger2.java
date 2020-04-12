@@ -10,25 +10,25 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@Configuration
-@EnableSwagger2
-public class Swagger2 {
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("SpringBoot使用Swagger2构建RESTful API")
-                .description("API描述")
-                .termsOfServiceUrl("http://47.97.168.90")
-                .contact("卜飞龙")
-                .version("1.0")
-                .build();
-    }
-
-    @Bean
-    public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.demo"))
-                .paths(PathSelectors.any())
-                .build();
-    }
-}
+//@Configuration
+//@EnableSwagger2
+//public class Swagger2 {
+//    private ApiInfo apiInfo() {
+//        return new ApiInfoBuilder().title("SpringBoot使用Swagger2构建RESTful API")
+//                .description("API描述")
+//                .termsOfServiceUrl("http://47.97.168.90")
+//                .contact("卜飞龙")
+//                .version("1.0")
+//                .build();
+//    }
+//
+//    @Bean
+//    public Docket createRestApi() {
+//        return new Docket(DocumentationType.SWAGGER_2)
+//                .apiInfo(apiInfo())
+//                .select()
+//                .apis(RequestHandlerSelectors.basePackage("com.example.demo"))
+//                .paths(PathSelectors.any())
+//                .build();
+//    }
+//}

@@ -12,4 +12,12 @@ public interface BlogCommentMapper {
 
     int insertSelective(BlogComment record);
 
+    int checkDone(Integer[] ids);
+
+    int deleteBatch(Integer[] ids);
+
+    BlogComment selectByPrimaryKey(Long commentId);
+
+    int updateByPrimaryKeySelective(BlogComment record);
+
 }

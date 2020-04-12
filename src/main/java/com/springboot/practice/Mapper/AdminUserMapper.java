@@ -12,4 +12,8 @@ public interface AdminUserMapper {
      * @return
      */
     AdminUser login(@Param("userName") String userName, @Param("password") String password);
+
+    AdminUser selectByPrimaryKey(Integer loginUserId);
+
+    int updateByPrimaryKeySelective(AdminUser record);
 }

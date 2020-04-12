@@ -16,7 +16,33 @@
         <include refid="Base_Column_List"/>
         from tb_admin_user
         where login_user_name = #{userName, jdbcType=VARCHAR}
-        and login_password = #{passWord, jdbcType = VARCHAR}
+        and login_password = #{password, jdbcType = VARCHAR}
         and locked = 0
     </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_admin_user
+        where admin_user_id = #{loginUserId, jdbcType = INTEGER}
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.springboot.practice.Bean.AdminUser">
+        update tb_admin_user
+        <set>
+            <if test="loginUserName!=null">
+                login_user_name = #{loginUserName, jdbcType = VARCHAR},
+            </if>
+            <if test="loginPassword!=null">
+                login_password = #{loginPassword, jdbcType = VARCHAR},
+            </if>
+            <if test="nickName!=null">
+                nick_name = #{nickName, jdbcType = VARCHAR},
+            </if>
+            <if test="locked!=null">
+                locked = #{locked,jdbcType = TINYINT},
+            </if>
+        </set>
+        where admin_user_id = #{adminUserId, jdbcType = INTEGER}
+    </update>
 </mapper>

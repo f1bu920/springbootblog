@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -51,21 +48,31 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public PageResult getCommentsPage(PageQueryUtil pageUtil) {
-        return null;
+        List<BlogComment> blogCommentList = blogCommentMapper.findBlogCommentList(pageUtil);
+        int total = blogCommentMapper.getTotalBlogComments(pageUtil);
+        PageResult pageResult = new PageResult(total, pageUtil.getLimit(), pageUtil.getPage(), blogCommentList);
+        return pageResult;
     }
 
     @Override
     public Boolean checkDone(Integer[] ids) {
-        return null;
+        return blogCommentMapper.checkDone(ids) > 0;
     }
 
     @Override
     public Boolean reply(Long commentId, String replyBody) {
-        return null;
+        BlogComment blogComment = blogCommentMapper.selectByPrimaryKey(commentId);
+        //blogComment不为空且状态已审核
+        if (blogComment != null && blogComment.getCommentStatus().intValue() == 1) {
+            blogComment.setCommentBody(replyBody);
+            blogComment.setReplyCreateTime(new Date());
+            return blogCommentMapper.updateByPrimaryKeySelective(blogComment) > 0;
+        }
+        return false;
     }
 
     @Override
     public Boolean deleteBatch(Integer[] ids) {
-        return null;
+        return blogCommentMapper.deleteBatch(ids) > 0;
     }
 }
