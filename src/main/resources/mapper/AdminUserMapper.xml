@@ -40,7 +40,7 @@
                 nick_name = #{nickName, jdbcType = VARCHAR},
             </if>
             <if test="locked!=null">
-                locked = #{locked,jdbcType = TINYINT},
+                locked = #{locked,jdbcType = TINYINT}
             </if>
         </set>
         where admin_user_id = #{adminUserId, jdbcType = INTEGER}

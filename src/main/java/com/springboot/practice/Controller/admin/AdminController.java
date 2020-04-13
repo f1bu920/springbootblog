@@ -48,7 +48,7 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-//    @ResponseBody
+    @ResponseBody
     public String login(HttpSession session,
                         @RequestParam("userName") String userName,
                         @RequestParam("password") String password
@@ -60,12 +60,12 @@ public class AdminController {
         }
         AdminUser adminUser = adminUserService.login(userName, password);
         if (adminUser != null) {
-            session.setAttribute("loginUser", adminUser.getLoginUserName());
-            session.setAttribute("loginUserId", adminUser.getLoginPassword());
+            session.setAttribute("loginUser", adminUser.getNickName());
+            session.setAttribute("loginUserId", adminUser.getAdminUserId());
 //            设置session过期时间为2小时
 //            session.setMaxInactiveInterval(60 * 60 * 2);
-            return "redirect:/admin/index";
-//            return "success";
+//            return "redirect:/admin/index";
+            return "success";
         } else {
             session.setAttribute("errorMsg", "登录失败");
             return "admin/login";
@@ -73,6 +73,7 @@ public class AdminController {
     }
 
     @GetMapping("/profile")
+    @ResponseBody
     public String profile(HttpServletRequest request) {
         Integer loginUserId = (int) request.getSession().getAttribute("loginUserId");
         AdminUser adminUser = adminUserService.getUserDetailById(loginUserId);

@@ -6,6 +6,10 @@ public class AdminUser {
 
     private String loginUserName;
 
+    public Integer getAdminUserId() {
+        return adminUserId;
+    }
+
     private String loginPassword;
 
     private String nickName;
@@ -17,15 +21,15 @@ public class AdminUser {
     }
 
     public void setLoginUserName(String loginUserName) {
-        this.loginUserName = loginUserName == null ? null:loginUserName.trim();
+        this.loginUserName = loginUserName == null ? null : loginUserName.trim();
     }
 
     public void setLoginPassword(String loginPassword) {
-        this.loginPassword = loginPassword == null?null:loginPassword.trim();
+        this.loginPassword = loginPassword == null ? null : loginPassword.trim();
     }
 
     public void setNickName(String nickName) {
-        this.nickName = nickName == null? null:nickName.trim();
+        this.nickName = nickName == null ? null : nickName.trim();
     }
 
     public void setLocked(Byte locked) {
