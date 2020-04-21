@@ -11,9 +11,9 @@ public interface BlogTagMapper {
 
     BlogTag selectByTagName(String tagName);
 
-    int batchInsertBlogTag(List<BlogTag> tagList);
-
     int getTotalTags(PageQueryUtil pageQueryUtil);
+
+    int batchInsertBlogTag(List<BlogTag> tagList);
 
     List<BlogTag> findTagList(PageQueryUtil pageQueryUtil);
 
