@@ -30,7 +30,8 @@ public class BlogCategoryMapperTest {
 //        blogCategory.setCategoryRank(77);
 //        blogCategory.setCreateTime(new Date());
 //        blogCategory.setCategoryIcon("测试图标");
-//        blogCategory.setIsDeleted((byte) 0);
+//        blogCategory
+//        .setIsDeleted((byte) 0);
 //        int i = categoryMapper.insertSelective(blogCategory);
 //        System.out.println(i);
 //        System.out.println("selectByPrimaryKey方法");

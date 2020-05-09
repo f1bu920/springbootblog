@@ -20,12 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class BlogServiceImpl implements BlogService {
-    @Autowired
+    @Resource
     private BlogMapper blogMapper;
     @Autowired
     private BlogCategoryMapper categoryMapper;

@@ -2,6 +2,8 @@ package com.springboot.practice.Controller.admin;
 
 import com.springboot.practice.Bean.AdminUser;
 import com.springboot.practice.Service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    @Resource
+    @Autowired
     private AdminUserService adminUserService;
     @Resource
     private BlogService blogService;

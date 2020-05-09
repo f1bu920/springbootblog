@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BlogCategoryMapper {
 
-    List<BlogCategory> selectByCategoryIds(@Param("categoryIds")List<Integer> categoryIds);
+    List<BlogCategory> selectByCategoryIds(@Param("categoryIds") List<Integer> categoryIds);
 
     List<BlogCategory> findCategoryList(PageQueryUtil pageQueryUtil);
 
@@ -23,6 +23,4 @@ public interface BlogCategoryMapper {
     int insertSelective(BlogCategory record);
 
     int deleteBatch(Integer[] ids);
-
-
 }
