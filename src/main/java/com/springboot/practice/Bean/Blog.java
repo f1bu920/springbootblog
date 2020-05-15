@@ -143,6 +143,26 @@ public class Blog {
     }
 
     public void setBlogContent(String blogContent) {
-        this.blogContent = blogContent == null?null:blogContent.trim();
+        this.blogContent = blogContent == null ? null : blogContent.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "Blog{" +
+                "blogId=" + blogId +
+                ", blogTitle='" + blogTitle + '\'' +
+                ", blogSubUrl='" + blogSubUrl + '\'' +
+                ", blogCoverImage='" + blogCoverImage + '\'' +
+                ", blogCategoryId=" + blogCategoryId +
+                ", blogCategoryName='" + blogCategoryName + '\'' +
+                ", blogTags='" + blogTags + '\'' +
+                ", blogStatus=" + blogStatus +
+                ", blogViews=" + blogViews +
+                ", enableComment=" + enableComment +
+                ", isDeleted=" + isDeleted +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", blogContent='" + blogContent + '\'' +
+                '}';
     }
 }
