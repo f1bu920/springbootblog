@@ -18,6 +18,7 @@ public class BlogLinkMapperTest {
 
     @Test
     public void test() {
+
         int totalLinks = linkMapper.getTotalLinks(null);
         System.out.println(totalLinks);
         List<BlogLink> linkList = linkMapper.findLinkList(null);
