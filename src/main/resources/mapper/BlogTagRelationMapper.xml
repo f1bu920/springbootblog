@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.practice.Mapper.BlogTagRelationMapper">
+    <resultMap id="BaseResultMap" type="com.springboot.practice.Bean.BlogTagRelation">
+        <id column="relation_id" jdbcType="BIGINT" property="relationId"/>
+        <result column="blog_id" jdbcType="BIGINT" property="blogId"/>
+        <result column="tag_id" jdbcType="INTEGER" property="tagId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        relation_id,blog_id,tag_id,create_time
+    </sql>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into tb_blog_tag_relation(blog_id,tag_id)
+        values
+        <foreach collection="relationList" item="relation" separator=",">
+            (#{relation.blogId,jdbcType=BIGINT},#{relation.tagId,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByBlogId" parameterType="java.lang.Long">
+        delete from tb_blog_tag_relation
+        where blog_id=#{blogId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="selectDistinctTagIds" resultType="java.lang.Long">
+        select DISTINCT(tag_id)
+        from tb_blog_tag_relation
+        where tag_id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>
