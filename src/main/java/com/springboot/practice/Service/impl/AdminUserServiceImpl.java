@@ -3,6 +3,7 @@ package com.springboot.practice.Service.impl;
 import com.springboot.practice.Bean.AdminUser;
 import com.springboot.practice.Mapper.AdminUserMapper;
 import com.springboot.practice.Service.AdminUserService;
+import com.springboot.practice.Util.MD5Util;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,7 +15,8 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public AdminUser login(String userName, String password) {
-        return adminUserMapper.login(userName, password);
+        String MD5Password = MD5Util.MD5Encode(password, "UTF-8");
+        return adminUserMapper.login(userName, MD5Password);
     }
 
     @Override

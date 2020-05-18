@@ -34,7 +34,7 @@ public class MyBlogController {
     @Resource
     CommentService commentService;
 
-    public static String theme = "default";
+    public static String theme = "amaze";
 
     /**
      * 首页

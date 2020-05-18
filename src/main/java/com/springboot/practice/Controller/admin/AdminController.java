@@ -53,12 +53,15 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    @ResponseBody
     public String login(HttpSession session,
                         @RequestParam("userName") String userName,
-                        @RequestParam("password") String password
-//                      @RequestParam("verifyCode") String verifyCode
+                        @RequestParam("password") String password,
+                        @RequestParam("verifyCode") String verifyCode
     ) {
+        if (StringUtils.isEmpty(verifyCode)) {
+            session.setAttribute("errorMsg", "验证码不能为空");
+            return "admin/login";
+        }
         if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)) {
             session.setAttribute("errorMsg", "用户名或密码不能为空");
             return "admin/login";
@@ -69,8 +72,7 @@ public class AdminController {
             session.setAttribute("loginUserId", adminUser.getAdminUserId());
 //            设置session过期时间为2小时
 //            session.setMaxInactiveInterval(60 * 60 * 2);
-//            return "redirect:/admin/index";
-            return "success";
+            return "redirect:/admin/index";
         } else {
             session.setAttribute("errorMsg", "登录失败");
             return "admin/login";
